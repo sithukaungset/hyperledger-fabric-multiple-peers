@@ -38,10 +38,10 @@ async function main() {
         // const userName = 'isabella.issuer@magnetocorp.com';
         const prompt = require('prompt');
 	    prompt.start();
-        prompt.get(['name'],
+        prompt.get(['name','number'],
             async function(err,result){
                 if(err){return onErr(err);}
-                
+                console.log('Car Number'+ result.number)
                 console.log('Name: '+ result.name);
             
         // Load connection profile; will be used to locate a gateway
@@ -59,21 +59,20 @@ async function main() {
 
         await gateway.connect(connectionProfile, connectionOptions);
 
-        // Access PaperNet network
+        // Access car network
         console.log('Use network channel: Car channel.');
         
         const network = await gateway.getNetwork('mychannel');
 
-        // Get addressability to commercial paper contract
+        // Get addressability to car contract
         console.log('Use org.papernet.car smart contract.');
 
         const contract = await network.getContract('papercontract');
-   
-        // issue commercial paper
-        console.log('Submit car issue transaction.');
+         
+        // issue car
         
-        const issueResponse = await contract.submitTransaction('issue', 'Benz', '00001', 'S-class', '2020-05-31', '2020-11-30', '500000', 'Luxury Sedan');
-        
+        const issueResponse = await contract.submitTransaction('issue', result.name, result.number, 'S-class', '2020-05-31', '2020-11-30', '500000', 'Luxury Sedan');
+       
 
         // process response
         console.log('Process issue transaction response.'+issueResponse);
@@ -95,7 +94,7 @@ async function main() {
         
 
     } 
-}
+} 
 main().then(() => {
    
     

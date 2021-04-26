@@ -15,20 +15,24 @@
  */
 
 'use strict';
-
 // Bring key classes into scope, most importantly Fabric SDK network class
 const fs = require('fs');
 const yaml = require('js-yaml');
-const { Wallets, Gateway } = require('fabric-network');
+const { Wallets, Gateway, DefaultEventHandlerStrategies } = require('fabric-network');
 const CommercialPaper = require('../contract/lib/paper.js');
+
+
+
 
 // Main program function
 async function main() {
+    var start = new Date;
 
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet('../identity/user/isabella/wallet');
-
-    // A gateway defines the peers used to access Fabric networks
+    
+    
+// A gateway defines the peers used to access Fabric networks
     const gateway = new Gateway();
 
     // Main try/catch block
@@ -39,14 +43,41 @@ async function main() {
         const userName = 'isabella';
 
         // Load connection profile; will be used to locate a gateway
-        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connection-org2.yaml', 'utf8'));
+        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connectionProfile.yaml', 'utf8'));
+
+        // Important facts : CommitTimeout tells the SDK to wait 100 seconds to hear whether a transaction has been committed. 
+        // And strategy: DefaultEventHandlerStrategies.NETWORK_SCOPE_ALLFORTX specifies that the SDK can notify an application after
+        // all peers from MagnetoCorp and Digibank to confirm the transaction.
+
+
 
         // Set connection options; identity and wallet
+        
         let connectionOptions = {
             identity: userName,
             wallet: wallet,
-            discovery: { enabled:true, asLocalhost: true }
-        };
+            eventHandlerOptions: {
+                commitTimeout: 100,
+                strategy: DefaultEventHandlerStrategies.NETWORK_SCOPE_ALLFORTX
+
+            },
+            discovery: { enabled:true, asLocalhost: true 
+            
+            }
+            
+        } 
+
+       /*   
+        let connectionOptions = {
+            identity: userName,
+            wallet: wallet,
+           
+            discovery: { enabled:true, asLocalhost: true 
+            
+            }
+            
+        }
+        */
 
         // Connect to gateway using application specified parameters
         console.log('Connect to Fabric gateway.');
@@ -57,17 +88,35 @@ async function main() {
         console.log('Use network channel: mychannel.');
 
         const network = await gateway.getNetwork('mychannel');
+        
+        
 
         // Get addressability to commercial paper contract
         console.log('Use org.papernet.commercialpaper smart contract.');
 
         const contract = await network.getContract('papercontract');
+        
+      /*
+
+        // Get commit listener (important)
+        const listener = await network.addCommitListener(transaction.getTransactionID().getTransactionID(), (err, txId, status, blockNumber) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log(`Transaction ID: ${txId} Status: ${status} Block number: ${blockNumber}`);
+        });
+
+        const peers = network.channel.getEndorsers();
+        await network.addCommitListener(listener, peers, txId);
+        */
 
         // issue commercial paper
         console.log('Submit commercial paper issue transaction.');
-
+        
         const issueResponse = await contract.submitTransaction('issue', 'MagnetoCorp', '00001', '2020-05-31', '2020-11-30', '5000000');
-
+       
+       
         // process response
         console.log('Process issue transaction response.'+issueResponse);
 
@@ -75,24 +124,26 @@ async function main() {
 
         console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully issued for value ${paper.faceValue}`);
         console.log('Transaction complete.');
-
+        
     } catch (error) {
 
         console.log(`Error processing transaction. ${error}`);
         console.log(error.stack);
 
     } finally {
-
+    
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         gateway.disconnect();
+        var time = new Date - start;
+        console.log('Time taken: ' + time)
 
     }
 }
 main().then(() => {
 
-    console.log('Issue program complete.');
-
+    console.log('Issue program complete.');  
+    
 }).catch((e) => {
 
     console.log('Issue program exception.');
@@ -101,3 +152,10 @@ main().then(() => {
     process.exit(-1);
 
 });
+for (let i = 0; i < 30; i++) {
+    main();
+    
+    }
+
+
+

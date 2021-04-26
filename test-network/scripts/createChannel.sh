@@ -65,24 +65,30 @@ createChannel() {
 }
 
 # queryCommitted ORG
+
+
 joinChannel() {
-  ORG=$1
-  setGlobals $ORG
-	local rc=1
-	local COUNTER=1
-	## Sometimes Join takes time, hence retry
-	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
-    sleep $DELAY
-    set -x
-    peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block >&log.txt
-    res=$?
-    { set +x; } 2>/dev/null
-		let rc=$res
-		COUNTER=$(expr $COUNTER + 1)
-	done
-	cat log.txt
-	verifyResult $res "After $MAX_RETRY attempts, peer0.org${ORG} has failed to join channel '$CHANNEL_NAME' "
+ORG=$1
+
+setGlobals $ORG
+local rc=1
+local COUNTER=1
+## Sometimes Join takes time, hence retry
+while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
+sleep $DELAY
+set -x
+peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block >&log.txt
+res=$? 
+{ set +x; } 2>/dev/null
+let rc=$res
+COUNTER=$(expr $COUNTER + 1)
+done
+cat log.txt
+verifyResult $res "After $MAX_RETRY attempts, peer0.org${ORG} has failed to join channel '$CHANNEL_NAME' "
 }
+
+
+
 
 updateAnchorPeers() {
   ORG=$1

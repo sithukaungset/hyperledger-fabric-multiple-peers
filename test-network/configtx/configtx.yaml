@@ -240,16 +240,22 @@ Orderer: &OrdererDefaults
     BatchSize:
 
         # Max Message Count: The maximum number of messages to permit in a batch
-        MaxMessageCount: 10
+        MaxMessageCount: 100
+        # Maximum number of transactions or messages to permit in block.
+
 
         # Absolute Max Bytes: The absolute maximum number of bytes allowed for
         # the serialized messages in a batch.
         AbsoluteMaxBytes: 99 MB
+        # The strict maximum number of bytes allowed for serialized transactions/messages in a block.
+
 
         # Preferred Max Bytes: The preferred maximum number of bytes allowed for
         # the serialized messages in a batch. A message larger than the preferred
         # max bytes will result in a batch larger than preferred max bytes.
         PreferredMaxBytes: 512 KB
+        # The preferred maximum number of bytes allowed the serialized transactions or messages in a batch. A transaction or message larger than 
+        # the preferred max bytes will result in a batch larger than preferred max bytes.
 
     # Organizations is the list of orgs which are defined as participants on
     # the orderer side of the network

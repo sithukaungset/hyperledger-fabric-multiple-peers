@@ -61,6 +61,7 @@ class CarContract extends Contract {
      * @param {Context} ctx the transaction context
      * @param {String} issuer car issuer
      * @param {Integer} carNumber car number for this issuer
+     
      * @param {String} carModel the model of the car
      * @param {String} issueDateTime car issue date
      * @param {String} maturityDateTime car maturity date
@@ -68,15 +69,20 @@ class CarContract extends Contract {
      * @param {String} carType type of car
     */
     async issue(ctx, issuer, carNumber, carModel, issueDateTime, maturityDateTime, faceValue,carType) {
-
+       
         // create an instance of the paper
         let car = Car.createInstance(issuer, carNumber, carModel, issueDateTime, maturityDateTime, faceValue,carType);
 
+        
+     
         // Smart contract, rather than paper, moves paper into ISSUED state
         car.setIssued();
 
         // Newly issued paper is owned by the issuer
         car.setOwner(issuer);
+        
+
+        
 
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.carList.addCar(car);

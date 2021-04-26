@@ -1,0 +1,10 @@
+version: 0
+tlsconfig:
+  certpath: ""
+  keypath: ""
+  peercacertpath: /home/inlab/fabric-application/test-network/organizations/peerOrganizations/org1.example.com/tlsca/tlsca.org1.example.com-cert.pem
+  timeout: 0s
+signerconfig:
+  mspid: Org1MSP
+  identitypath: /home/inlab/fabric-application/test-network/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/cert.pem
+  keypath: /home/inlab/fabric-application/test-network/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp/keystore/b6886a8e8fb3d93f43e801b6954ea68e4be26cc331f9955d376d9d6b01a73edd_sk

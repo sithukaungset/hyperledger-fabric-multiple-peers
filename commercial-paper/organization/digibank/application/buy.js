@@ -19,13 +19,14 @@
 // Bring key classes into scope, most importantly Fabric SDK network class
 const fs = require('fs');
 const yaml = require('js-yaml');
-const { Wallets, Gateway } = require('fabric-network');
+ 
+const { Wallets, Gateway, DefaultEventHandlerStrategies } = require('fabric-network');
 const CommercialPaper = require('../../magnetocorp/contract/lib/paper.js');
 
 
 // Main program function
 async function main () {
-
+    console.time("TimeTaken");
     // A wallet stores a collection of identities for use
     const wallet = await Wallets.newFileSystemWallet('../identity/user/balaji/wallet');
 
@@ -40,12 +41,16 @@ async function main () {
         const userName = 'balaji';
 
         // Load connection profile; will be used to locate a gateway
-        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connection-org1.yaml', 'utf8'));
+        let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connectionProfile.yaml', 'utf8'));
 
         // Set connection options; identity and wallet
         let connectionOptions = {
             identity: userName,
             wallet: wallet,
+            eventHandlerOptions: {
+                commitTimeout: 100,
+                strategy: DefaultEventHandlerStrategies.NETWORK_SCOPE_ANYFORTX
+            }, 
             discovery: { enabled: true, asLocalhost: true }
 
         };
@@ -88,6 +93,7 @@ async function main () {
         // Disconnect from the gateway
         console.log('Disconnect from Fabric gateway.');
         gateway.disconnect();
+        console.timeEnd("TimeTaken");
 
     }
 }

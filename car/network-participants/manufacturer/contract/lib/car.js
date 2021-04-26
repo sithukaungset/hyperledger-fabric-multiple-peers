@@ -48,6 +48,15 @@ class Car extends State {
     setOwner(newOwner) {
         this.owner = newOwner;
     }
+    getCarnumber() {
+        return this.carNumber;
+    }
+
+    setCarnumber(newcarNumber) {
+        this.carNumber = newcarNumber;
+    }
+   
+
 
     /**
      * Useful methods to encapsulate commercial paper states
@@ -111,7 +120,7 @@ class Car extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(issuer, carNumber, carModel, issueDateTime, maturityDateTime, faceValue,carType) {
+    static createInstance(issuer, carNumber,  carModel, issueDateTime, maturityDateTime, faceValue,carType) {
         return new Car({ issuer, carNumber, carModel, issueDateTime, maturityDateTime, faceValue,carType });
     }
 

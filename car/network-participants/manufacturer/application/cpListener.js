@@ -84,6 +84,7 @@ async function main() {
                 }
             }
         };
+   
         const options = {
             type: 'full',
             startBlock: 1
@@ -95,11 +96,12 @@ async function main() {
             // ... do other things
         }
         gateway.disconnect();
-            });
+    });      
     }
     catch (error) {
         console.error('Error: ', error);
         process.exit(1);
     }
 }
+
 void main();

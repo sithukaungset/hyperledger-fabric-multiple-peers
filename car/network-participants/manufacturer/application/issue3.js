@@ -72,7 +72,7 @@ async function main() {
         // issue commercial paper
         console.log('Submit car issue transaction.');
         
-        const issueResponse = await contract.submitTransaction('issue', 'Benz', '00003', 'C-class', '2020-05-31', '2020-11-30', '500000', 'Small size Luxury Sedan');
+        const issueResponse = await contract.submitTransaction('issue', result.name, '00003', 'C-class', '2020-05-31', '2020-11-30', '500000', 'Small size Luxury Sedan');
         
 
         // process response

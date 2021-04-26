@@ -39,13 +39,13 @@ async function main () {
         // Specify userName for network access
         const prompt = require('prompt');
 	    prompt.start();
-        prompt.get(['name','carNo'],
+        prompt.get(['name','carNo','seller'],
             async function(err,result){
                 if(err){return onErr(err);}
                 
                 console.log('Name: '+ result.name);
                 console.log('carNo: '+ result.carNo);
-     
+                console.log('Car Seller: '+ result.seller);
         // Load connection profile; will be used to locate a gateway
         let connectionProfile = yaml.safeLoad(fs.readFileSync('../gateway/connection-org1.yaml', 'utf8'));
 
@@ -75,7 +75,7 @@ async function main () {
         // buy commercial paper
         console.log('Submit car buying transaction.');
         
-        const buyResponse = await contract.submitTransaction('buy', 'Benz',result.carNo, 'S-class', 'Benz', result.name , '550000', '2020-05-31', 'Luxury Sedan');
+        const buyResponse = await contract.submitTransaction('buy',result.seller, result.carNo, 'S-class', result.seller, result.name , '550000', '2020-05-31', 'Luxury Sedan');
 
         // process response
         console.log('Process buy transaction response.');
